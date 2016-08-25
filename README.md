@@ -13,13 +13,17 @@ build and run the servlet:
 ## Build and the App
 You need to have *Cordova* and *Android SDK* already installed and configured.
 
-Go to the cordova directory:
+* Go to the cordova directory:
+
+    cd  org.sb.sample.push.cordova
+    
 * initialize your project: 
     
     cordova prepare
+    
 * run your App on android: 
-** plug your android device on your computer
-** run
+    * plug your android device on your computer
+    * run
 
     cordova run android
   
