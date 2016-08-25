@@ -1,21 +1,34 @@
-# org.sb.sample
+h1. org.sb.sample
 sample of cordova applications
 
+h2. Build and run the web app 
 Go to the webapp directory:
-  cd org.sb.sample.push.webapp
+
+{code}
+cd org.sb.sample.push.webapp
+{code}
+
+
 build and run the servlet:
+
+{code}
   ./graddlew jettyRunWar
-open a web browser on:
- http://localhost:8090/org.sb.sample.push.webapp
+{code}
+
+
+h2. Build and the App
+You need to have *Cordova* and *Android SDK* already installed and configured.
 
 Go to the cordova directory:
-initialize your project: 
-  cordova prepare
-run your project on android: 
-  plug your android device on your computer
-run
-  cordova run android
+* initialize your project: 
+{code}cordova prepare{code}
+* run your App on android: 
+** plug your android device on your computer
+** run
+{code}cordova run android{code}
   
-In the web browser enter the content of your message and click on 'Submit'
+h2. Send a notification
+* In a web browser go to: http://localhost:8090/org.sb.sample.push.webapp
+* Enter the content of your message and click on 'Submit'
 
-Then your application on your android device should receive the message.
+Check that your application on your android device has received the message.
