@@ -1,0 +1,12 @@
+{
+   "type" : "messageRequest",
+   "to" : "theTo",
+   "condition" : "theCondition",
+   "data" : {
+      "message" : "theMessage"
+   },
+   "collapse_key" : "theCollapseKey",
+   "time_to_live" : 5,
+   "delay_while_idle" : true,
+   "priority" : "thePriority"
+}

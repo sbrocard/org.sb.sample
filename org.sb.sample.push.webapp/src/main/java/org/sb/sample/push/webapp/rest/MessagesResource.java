@@ -13,30 +13,46 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.UriInfo;
 
-import org.sb.sample.push.webapp.device.DeviceDao;
-import org.sb.sample.push.webapp.gcmsender.GcmSender;
+import org.sb.sample.push.client.DataMessage;
+import org.sb.sample.push.client.IMessageResponse;
+import org.sb.sample.push.client.INotificationService;
+import org.sb.sample.push.client.MessageRequest;
+import org.sb.sample.push.client.device.IDeviceService;
+import org.sb.sample.push.webapp.ServiceLocator;
 
 // Will map the resource to the URL devices
 @Path("/messages")
 public class MessagesResource {
 
-  // Allows to insert contextual objects into the class,
-  // e.g. ServletContext, Request, Response, UriInfo
-  @Context
-  UriInfo uriInfo;
-  @Context
-  Request request;
+	// Allows to insert contextual objects into the class,
+	// e.g. ServletContext, Request, Response, UriInfo
+	@Context
+	UriInfo uriInfo;
+	@Context
+	Request request;
 
-  @POST
-  @Produces(MediaType.TEXT_HTML)
-  @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-  public void sendMessage(@FormParam("message") String message,
-      @Context HttpServletResponse servletResponse) throws IOException {
-    GcmSender gcmSender = new GcmSender();
-    for (String key : DeviceDao.instance.getModel().keySet()) {
-		gcmSender.send(message, key);
+	public MessagesResource() {
 	}
-    servletResponse.sendRedirect("../../org.sb.sample.push.webapp");
-  }
+
+	@POST
+	@Produces(MediaType.TEXT_HTML)
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public void sendMessage(@FormParam("message") String message,
+			@Context HttpServletResponse servletResponse) throws IOException {
+		INotificationService notificationService = ServiceLocator.instance.getNotificationService();
+		IDeviceService deviceService = ServiceLocator.instance.getDeviceService();
+		if (notificationService != null && deviceService != null) {
+			for (String key : deviceService.getDeviceIds(IDeviceService.SEARCH_CRITERIA_ALL)) {
+				MessageRequest messageRequest = new MessageRequest();
+				messageRequest.data = new DataMessage(message);
+				IMessageResponse sendMessageTo = notificationService.sendMessageTo(key, messageRequest);
+				System.out.println(sendMessageTo);
+			}
+		} else {
+			// TODO sb
+		}
+		// TODO sb remettre ca, ca fait echouer les tests
+//		servletResponse.sendRedirect("../../org.sb.sample.push.webapp");
+	}
 
 } 

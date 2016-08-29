@@ -1,0 +1,7 @@
+/.gradle/
+/bin/
+/build/
+/outdir/
+/.project~
+/alerts.txt
+/report.xml

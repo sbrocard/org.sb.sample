@@ -12,8 +12,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.JAXBElement;
 
-import org.sb.sample.push.webapp.device.Device;
-import org.sb.sample.push.webapp.device.DeviceDao;
+import org.sb.sample.push.client.device.Device;
+import org.sb.sample.push.webapp.ServiceLocator;
 
 public class DeviceResource {
   @Context
@@ -31,17 +31,17 @@ public class DeviceResource {
   @GET
   @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
   public Device getDevice() {
-    Device todo = DeviceDao.instance.getModel().get(id);
-    if(todo==null)
+    Device device = ServiceLocator.instance.getDeviceService().findDevice(id);
+    if(device==null)
       throw new RuntimeException("Get: Device with " + id +  " not found");
-    return todo;
+    return device;
   }
   
   // for the browser
   @GET
   @Produces(MediaType.TEXT_XML)
   public Device getDeviceHTML() {
-    Device todo = DeviceDao.instance.getModel().get(id);
+    Device todo = ServiceLocator.instance.getDeviceService().findDevice(id);
     if(todo==null)
       throw new RuntimeException("Get: Device with " + id +  " not found");
     return todo;
@@ -56,19 +56,19 @@ public class DeviceResource {
   
   @DELETE
   public void deleteDevice() {
-    Device c = DeviceDao.instance.getModel().remove(id);
+    Device c = ServiceLocator.instance.getDeviceService().deleteDevice(id);
     if(c==null)
       throw new RuntimeException("Delete: Device with " + id +  " not found");
   }
   
-  private Response putAndGetResponse(Device todo) {
+  private Response putAndGetResponse(Device device) {
     Response res;
-    if(DeviceDao.instance.getModel().containsKey(todo.getId())) {
+    if(ServiceLocator.instance.getDeviceService().existsDevice(device.getId())) {
       res = Response.noContent().build();
     } else {
       res = Response.created(uriInfo.getAbsolutePath()).build();
     }
-    DeviceDao.instance.getModel().put(todo.getId(), todo);
+    ServiceLocator.instance.getDeviceService().registerDevice(device);
     return res;
   }
   

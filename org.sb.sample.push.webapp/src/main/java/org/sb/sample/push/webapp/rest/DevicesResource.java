@@ -17,8 +17,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.UriInfo;
 
-import org.sb.sample.push.webapp.device.Device;
-import org.sb.sample.push.webapp.device.DeviceDao;
+import org.sb.sample.push.client.device.Device;
+import org.sb.sample.push.client.device.IDeviceService;
+import org.sb.sample.push.webapp.ServiceLocator;
 
 // Will map the resource to the URL devices
 @Path("/devices")
@@ -39,7 +40,7 @@ public class DevicesResource {
   }
 
   private List<Device> getDevicesImpl() {
-	  return new ArrayList<Device>(DeviceDao.instance.getModel().values());
+	  return new ArrayList<Device>(ServiceLocator.instance.getDeviceService().findDevices(IDeviceService.SEARCH_CRITERIA_ALL));
   }
 
   // Return the list of devices for applications
@@ -50,13 +51,13 @@ public class DevicesResource {
   }
 
   // retuns the number of devices
-  // Use http://localhost:8080/com.vogella.jersey.device/rest/devices/count
+  // Use http://localhost:8080/org.sb.sample.push.webapp/rest/devicvaluees/count
   // to get the total number of records
   @GET
   @Path("count")
   @Produces(MediaType.TEXT_PLAIN)
   public String getCount() {
-    int count = DeviceDao.instance.getModel().size();
+    int count = ServiceLocator.instance.getDeviceService().getDeviceCount();
     return String.valueOf(count);
   }
 
@@ -66,12 +67,12 @@ public class DevicesResource {
   public void newDevice(@FormParam("id") String id,
       @Context HttpServletResponse servletResponse) throws IOException {
     Device device = new Device(id);
-    DeviceDao.instance.getModel().put(id, device);
+    ServiceLocator.instance.getDeviceService().registerDevice(device);
   }
 
   // Defines that the next path parameter after devices is
   // treated as a parameter and passed to the DeviceResources
-  // Allows to type http://localhost:8080/com.vogella.jersey.device/rest/devices/1
+  // Allows to type http://localhost:8080/org.sb.sample.push.webapp/rest/devices/1
   // 1 will be treaded as parameter device and passed to DeviceResource
   @Path("{device}")
   public DeviceResource getDevice(@PathParam("device") String id) {

@@ -4,16 +4,37 @@ apply plugin: 'jetty'
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
+group = 'org.sb.sample.push'
+version = '1.0'
+
 dependencies {
+	// TODO sb, minimise the dependencies
+
     compile group: 'commons-io', name: 'commons-io', version: '2.5'
     compile group: 'org.json', name: 'json', version: '20160212', ext: 'jar'
     compile group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet-core', version: '2.23.2', ext: 'jar'
+    compile group: 'org.glassfish.jersey.media', name: 'jersey-media-multipart', version: '2.23.2', ext: 'jar', transitive: 'true'
+    compile group: 'org.glassfish.jersey.ext', name: 'jersey-entity-filtering', version: '2.23.2', ext: 'jar'
+    compile group: 'org.eclipse.persistence', name: 'org.eclipse.persistence.moxy', version: '2.5.0', ext: 'jar'
+    compile group: 'org.eclipse.persistence', name: 'org.eclipse.persistence.core', version: '2.5.0', ext: 'jar'
+    
     compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0.1', ext: 'jar'
     compile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.0.1', ext: 'jar'
     providedCompile "javax.servlet:servlet-api:2.5"
     runtime "org.glassfish.jersey.core:jersey-server:2.23.2"
+    
+    compile group: 'org.glassfish.jersey.core', name: 'jersey-client', version: '2.23.2', ext: 'jar', transitive: true
+    compile group: 'org.glassfish.jersey.media', name: 'jersey-media-moxy', version: '2.23.2', ext: 'jar', transitive: true
+
+    compile group: 'org.sb.sample.push', name: 'org.sb.sample.push.client', version: '1.0', ext: 'jar', transitive: true
+    
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.glassfish.jersey.test-framework:jersey-test-framework-core:2.23.2'
+    
+    testCompile 'org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-grizzly2:2.23.2'
 }
 
 war {
