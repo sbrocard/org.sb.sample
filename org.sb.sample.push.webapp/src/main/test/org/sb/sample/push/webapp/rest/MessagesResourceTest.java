@@ -17,7 +17,6 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.sb.sample.push.client.device.Device;
 import org.sb.sample.push.client.http.HttpPost;
 import org.sb.sample.push.client.impl.NotificationServiceImpl;
 import org.sb.sample.push.webapp.ServiceLocator;
@@ -31,7 +30,7 @@ public class MessagesResourceTest extends JerseyTest {
 
 	@Test
 	public void testSendMessage() throws MalformedURLException, URISyntaxException, InterruptedException {
-		createDevice("theId1");
+		Utils.createDevice("theId1");
 
 		String html = sendMessageToDevices(1);
 
@@ -40,18 +39,11 @@ public class MessagesResourceTest extends JerseyTest {
 		assertEquals("{\"xsi:type\":\"messageRequest\",\"to\":\"theId1\",\"data\":{\"message\":\"the Message\"}}", GoogleServiceResourceMock.getMessages().get(0));
 	}
 
-	private Device createDevice(String id) {
-		Device device1 = new Device();
-		device1.setId(id);
-		ServiceLocator.instance.getDeviceService().registerDevice(device1);
-		return device1;
-	}
-
 	@Test
 	public void testSendMessageTwoDevices() throws MalformedURLException, URISyntaxException, InterruptedException {
 
-		createDevice("theId1");
-		createDevice("theId2");
+		Utils.createDevice("theId1");
+		Utils.createDevice("theId2");
 
 		String html = sendMessageToDevices(2);
 

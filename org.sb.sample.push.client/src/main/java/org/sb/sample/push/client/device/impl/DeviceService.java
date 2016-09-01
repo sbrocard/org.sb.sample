@@ -10,30 +10,43 @@ import org.sb.sample.push.client.device.Topic;
 public class DeviceService implements IDeviceService {
 
 	/**
-	 * TODO sb, inject the impl with dependency injection
+	 * TODO sb, inject the implementation with dependency injection
 	 */
 	private final IDeviceDao dao = new DeviceDao();
 	
 	@Override
 	public void registerDevice(Device device) {
-		dao.getModel().put(device.getId(), device);
+		if (! dao.contains(device)) {
+			try {
+				dao.add(device);
+			} catch (DeviceDaoException e) {
+				// TODO sb handle the exception
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
 	public void unregisterDevice(Device device) {
-		// TODO Auto-generated method stub
-
+		if (dao.contains(device)) {
+			try {
+				dao.delete(device);
+			} catch (DeviceDaoException e) {
+				// TODO sb handle the exception
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
 	public Device findDevice(String id) {
-		return dao.getModel().get(id);
+		return dao.findDevice(id);
 	}
 
 	@Override
 	public Collection<Device> findDevices(String searchCriteria) {
 		if (SEARCH_CRITERIA_ALL.equals(searchCriteria)) {
-			return Collections.unmodifiableCollection(dao.getModel().values());
+			return dao.getAllDevices();
 		}
 		return Collections.<Device>emptyList();	
 	}
@@ -63,21 +76,20 @@ public class DeviceService implements IDeviceService {
 
 	@Override
 	public Device deleteDevice(String id) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Iterable<String> getDeviceIds(String searchCriteria) {
 		if (SEARCH_CRITERIA_ALL.equals(searchCriteria)) {
-			return Collections.unmodifiableCollection(dao.getModel().keySet());
+			return dao.getAllDeviceIds();
 		}
 		return Collections.<String>emptyList();
 	}
 
 	@Override
 	public boolean existsDevice(String id) {
-		return dao.getModel().containsKey(id);
+		return dao.contains(id);
 	}
 
 	@Override

@@ -16,62 +16,63 @@ import org.sb.sample.push.client.device.Device;
 import org.sb.sample.push.webapp.ServiceLocator;
 
 public class DeviceResource {
-  @Context
-  UriInfo uriInfo;
-  @Context
-  Request request;
-  String id;
-  public DeviceResource(UriInfo uriInfo, Request request, String id) {
-    this.uriInfo = uriInfo;
-    this.request = request;
-    this.id = id;
-  }
-  
-  //Application integration     
-  @GET
-  @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-  public Device getDevice() {
-    Device device = ServiceLocator.instance.getDeviceService().findDevice(id);
-    if(device==null)
-      throw new RuntimeException("Get: Device with " + id +  " not found");
-    return device;
-  }
-  
-  // for the browser
-  @GET
-  @Produces(MediaType.TEXT_XML)
-  public Device getDeviceHTML() {
-    Device todo = ServiceLocator.instance.getDeviceService().findDevice(id);
-    if(todo==null)
-      throw new RuntimeException("Get: Device with " + id +  " not found");
-    return todo;
-  }
-  
-  @PUT
-  @Consumes(MediaType.APPLICATION_XML)
-  public Response putDevice(JAXBElement<Device> todo) {
-    Device c = todo.getValue();
-    return putAndGetResponse(c);
-  }
-  
-  @DELETE
-  public void deleteDevice() {
-    Device c = ServiceLocator.instance.getDeviceService().deleteDevice(id);
-    if(c==null)
-      throw new RuntimeException("Delete: Device with " + id +  " not found");
-  }
-  
-  private Response putAndGetResponse(Device device) {
-    Response res;
-    if(ServiceLocator.instance.getDeviceService().existsDevice(device.getId())) {
-      res = Response.noContent().build();
-    } else {
-      res = Response.created(uriInfo.getAbsolutePath()).build();
-    }
-    ServiceLocator.instance.getDeviceService().registerDevice(device);
-    return res;
-  }
-  
-  
+	@Context
+	UriInfo uriInfo;
+	@Context
+	Request request;
+	String id;
+	public DeviceResource(UriInfo uriInfo, Request request, String id) {
+		this.uriInfo = uriInfo;
+		this.request = request;
+		this.id = id;
+	}
+
+	//Application integration     
+	@GET
+	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+	public Device getDevice() {
+		return findDevice();
+	}
+
+	private Device findDevice() {
+		Device device = ServiceLocator.instance.getDeviceService().findDevice(id);
+		if(device==null)
+			throw new RuntimeException("Get: Device with " + id +  " not found");
+		return device;
+	}
+
+	// for the browser
+	@GET
+	@Produces(MediaType.TEXT_XML)
+	public Device getDeviceHTML() {
+		return findDevice();
+	}
+
+	@PUT
+	@Consumes(MediaType.APPLICATION_XML)
+	public Response putDevice(JAXBElement<Device> todo) {
+		Device c = todo.getValue();
+		return putAndGetResponse(c);
+	}
+
+	@DELETE
+	public void deleteDevice() {
+		Device c = ServiceLocator.instance.getDeviceService().deleteDevice(id);
+		if(c==null)
+			throw new RuntimeException("Delete: Device with " + id +  " not found");
+	}
+
+	private Response putAndGetResponse(Device device) {
+		Response res;
+		if(ServiceLocator.instance.getDeviceService().existsDevice(device.getId())) {
+			res = Response.noContent().build();
+		} else {
+			res = Response.created(uriInfo.getAbsolutePath()).build();
+		}
+		ServiceLocator.instance.getDeviceService().registerDevice(device);
+		return res;
+	}
+
+
 
 } 

@@ -3,19 +3,13 @@ package org.sb.sample.push.client;
 import static org.junit.Assert.assertEquals;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 
 import javax.ws.rs.ProcessingException;
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 
-import org.apache.commons.io.FileUtils;
-import org.eclipse.persistence.jaxb.MarshallerProperties;
 import org.junit.Test;
 import org.sb.sample.push.client.http.JSONReaderWriter;
 

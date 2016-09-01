@@ -23,6 +23,11 @@ public enum ServiceLocator {
 	private INotificationService notificationService;
 	
 	/**
+	 * TODO sb, get the target URL from configuration of the app
+	 */
+	private static final String HTTP_ANDROID_GOOGLEAPIS_COM_GCM_SEND = "http://android.googleapis.com/gcm/send";
+
+	/**
 	 * TODO sb, get the key from the configuration of the app
 	 */
 	public static final String API_KEY = "AIzaSyAg4fBYuH361390QCL5LukBJm1qrH1yntM";
@@ -31,7 +36,7 @@ public enum ServiceLocator {
 	private ServiceLocator() {
 		NotificationServiceImpl notificationService1;
 		try {
-			notificationService1 = new NotificationServiceImpl(new HttpPost(API_KEY));
+			notificationService1 = new NotificationServiceImpl(new HttpPost(API_KEY, HTTP_ANDROID_GOOGLEAPIS_COM_GCM_SEND));
 		} catch (MalformedURLException | URISyntaxException e) {
 			// TODO sb deal with the exception
 			notificationService1 = null;

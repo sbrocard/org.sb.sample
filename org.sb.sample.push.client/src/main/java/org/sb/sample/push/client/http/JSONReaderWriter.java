@@ -12,6 +12,13 @@ import javax.xml.transform.stream.StreamSource;
 import org.eclipse.persistence.jaxb.MarshallerProperties;
 import org.eclipse.persistence.jaxb.UnmarshallerProperties;
 
+/**
+ * This class is a possible alternative to the automatic use of
+ * the JSON marshalling done by Jersey. 
+ * It will probably be removed soon
+ * @author sbrocard
+ *
+ */
 public class JSONReaderWriter {
 
 	public static <T> byte[] marshall(T data) throws JAXBException
