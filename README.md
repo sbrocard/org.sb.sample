@@ -1,10 +1,10 @@
 # org.sb.sample
-sample of cordova applications
+sample of cordova applications that receives push notification sent by a java web application
 
 ## Build and run the web app 
-Go to the webapp directory:
+Make sure you are in root directory:
 
-    cd org.sb.sample.push.webapp
+    cd org.sb.sample
 
 build and run the servlet:
 

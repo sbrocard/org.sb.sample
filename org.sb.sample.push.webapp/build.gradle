@@ -1,5 +1,6 @@
 apply plugin: 'war'
 apply plugin: 'jetty'
+apply plugin: 'eclipse'
 //apply plugin: 'eclipse-wtp'
 
 repositories {
@@ -29,7 +30,7 @@ dependencies {
     compile group: 'org.glassfish.jersey.core', name: 'jersey-client', version: '2.23.2', ext: 'jar', transitive: true
     compile group: 'org.glassfish.jersey.media', name: 'jersey-media-moxy', version: '2.23.2', ext: 'jar', transitive: true
 
-    compile group: 'org.sb.sample.push', name: 'org.sb.sample.push.client', version: '1.0', ext: 'jar', transitive: true
+    compile project(':org.sb.sample.push.client')
     
     testCompile 'junit:junit:4.12'
     testCompile 'org.glassfish.jersey.test-framework:jersey-test-framework-core:2.23.2'

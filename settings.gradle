@@ -1,0 +1,3 @@
+// To declare projects as part of a multi-project build use the 'include' method
+include 'org.sb.sample.push.client'
+include 'org.sb.sample.push.webapp'

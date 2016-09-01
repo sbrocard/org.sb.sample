@@ -9,6 +9,7 @@
 
 // Apply the java plugin to add support for Java
 apply plugin: 'java'
+apply plugin: 'eclipse'
 
 group = 'org.sb.sample.push'
 version = '1.0'
@@ -18,7 +19,6 @@ repositories {
     // Use 'jcenter' for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
-    //mavenCentral()
 }
 
 // In this section you declare the dependencies for your production and test code
@@ -32,22 +32,4 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
    
-}
-
-apply plugin: 'maven-publish'
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
-    }
-}
-publishing {
-    repositories {
-        maven {
-            // change to point to your repo, e.g. http://my.org/repo
-            url "$buildDir/repo"
-        }
-    }
 }
