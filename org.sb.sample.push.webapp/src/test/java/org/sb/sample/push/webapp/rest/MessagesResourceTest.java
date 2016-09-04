@@ -7,30 +7,30 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 
-import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.sb.sample.push.client.http.HttpPost;
-import org.sb.sample.push.client.impl.NotificationServiceImpl;
-import org.sb.sample.push.webapp.ServiceLocator;
+import org.sb.sample.push.client.device.IDeviceService;
 
 public class MessagesResourceTest extends JerseyTest {
 
+	@Inject
+	private IDeviceService deviceService;
+
 	@Override
 	protected Application configure() {
-		return new ResourceConfig(MessagesResource.class, GoogleServiceResourceMock.class);
+		return Utils.configure(this, getBaseUri(), MessagesResource.class, GoogleServiceResourceMock.class);
 	}
-
+	
 	@Test
 	public void testSendMessage() throws MalformedURLException, URISyntaxException, InterruptedException {
-		Utils.createDevice("theId1");
+		Utils.createDevice(deviceService, "theId1");
 
 		String html = sendMessageToDevices(1);
 
@@ -42,8 +42,8 @@ public class MessagesResourceTest extends JerseyTest {
 	@Test
 	public void testSendMessageTwoDevices() throws MalformedURLException, URISyntaxException, InterruptedException {
 
-		Utils.createDevice("theId1");
-		Utils.createDevice("theId2");
+		Utils.createDevice(deviceService, "theId1");
+		Utils.createDevice(deviceService, "theId2");
 
 		String html = sendMessageToDevices(2);
 
@@ -71,18 +71,11 @@ public class MessagesResourceTest extends JerseyTest {
 		return html;
 	}
 
-	@Before
-	public void setUp() throws Exception {
-		super.setUp();
-
-		NotificationServiceImpl notificationService = new NotificationServiceImpl(new HttpPost("The_API_KEY", getBaseUri() + "gcm/send"));
-		ServiceLocator.instance.setNotificationService(notificationService);
-	}
-
 	@After
 	public void tearDown() throws Exception {
 		super.tearDown();
-		ServiceLocator.instance.reset();
+		deviceService.reset();
+		deviceService = null;
 		GoogleServiceResourceMock.reset();
 	}
 

@@ -3,24 +3,27 @@ package org.sb.sample.push.webapp.rest;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import javax.inject.Inject;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 
-import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.After;
 import org.junit.Test;
-import org.sb.sample.push.webapp.ServiceLocator;
+import org.sb.sample.push.client.device.IDeviceService;
 
 public class DevicesResourceTest extends JerseyTest {
 
-    @Override
+	@Inject
+	private IDeviceService deviceService;
+
+	@Override
     protected Application configure() {
-        return new ResourceConfig(DevicesResource.class);
+		return Utils.configure(this, getBaseUri(), DevicesResource.class);
     }
- 
+
     @Test
     public void testNewDevice() {
     	Form form = new Form();
@@ -33,13 +36,13 @@ public class DevicesResourceTest extends JerseyTest {
     			    		String.class);
     	
         assertEquals("returns an empty page", "", empty);
-        assertTrue("the device must have been inserted", ServiceLocator.instance.getDeviceService().existsDevice(id));
+        assertTrue("the device must have been inserted", deviceService.existsDevice(id));
     }
 
     @Test
     public void testDeviceCount() {
-    	Utils.createDevice("toto");
-    	Utils.createDevice("titi");
+    	Utils.createDevice(deviceService, "toto");
+    	Utils.createDevice(deviceService, "titi");
     	String count =
     			target("/devices/count").request(MediaType.TEXT_PLAIN)
     			    .get(String.class);
@@ -49,8 +52,8 @@ public class DevicesResourceTest extends JerseyTest {
     
     @Test
     public void testGetDevicesXml() {
-    	Utils.createDevice("toto");
-    	Utils.createDevice("titi");
+    	Utils.createDevice(deviceService, "toto");
+    	Utils.createDevice(deviceService, "titi");
     	String theDevice =
     			target("/devices").request(MediaType.APPLICATION_XML)
     			    .get(String.class);
@@ -60,8 +63,8 @@ public class DevicesResourceTest extends JerseyTest {
 
     @Test
     public void testGetDevicesJson() {
-    	Utils.createDevice("toto");
-    	Utils.createDevice("titi");
+    	Utils.createDevice(deviceService, "toto");
+    	Utils.createDevice(deviceService, "titi");
     	String theDevice =
     			target("/devices").request(MediaType.APPLICATION_JSON)
     			    .get(String.class);
@@ -73,7 +76,7 @@ public class DevicesResourceTest extends JerseyTest {
     @After
 	public void tearDown() throws Exception {
 		super.tearDown();
-		ServiceLocator.instance.reset();
+		deviceService.reset();//ServiceLocator.instance.reset();
      }
     
 }

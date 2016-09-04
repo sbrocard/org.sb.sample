@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
@@ -19,12 +20,13 @@ import javax.ws.rs.core.UriInfo;
 
 import org.sb.sample.push.client.device.Device;
 import org.sb.sample.push.client.device.IDeviceService;
-import org.sb.sample.push.webapp.ServiceLocator;
 
 // Will map the resource to the URL devices
 @Path("/devices")
 public class DevicesResource {
 
+	@Inject
+	private IDeviceService deviceService;
   // Allows to insert contextual objects into the class,
   // e.g. ServletContext, Request, Response, UriInfo
   @Context
@@ -40,7 +42,7 @@ public class DevicesResource {
   }
 
   private List<Device> getDevicesImpl() {
-	  return new ArrayList<Device>(ServiceLocator.instance.getDeviceService().findDevices(IDeviceService.SEARCH_CRITERIA_ALL));
+	  return new ArrayList<Device>(deviceService.findDevices(IDeviceService.SEARCH_CRITERIA_ALL));
   }
 
   // Return the list of devices for applications
@@ -57,7 +59,7 @@ public class DevicesResource {
   @Path("count")
   @Produces(MediaType.TEXT_PLAIN)
   public String getCount() {
-    int count = ServiceLocator.instance.getDeviceService().getDeviceCount();
+    int count = deviceService.getDeviceCount();
     return String.valueOf(count);
   }
 
@@ -67,7 +69,7 @@ public class DevicesResource {
   public void newDevice(@FormParam("id") String id,
       @Context HttpServletResponse servletResponse) throws IOException {
     Device device = new Device(id);
-    ServiceLocator.instance.getDeviceService().registerDevice(device);
+    deviceService.registerDevice(device);
   }
 
   // Defines that the next path parameter after devices is
@@ -76,7 +78,7 @@ public class DevicesResource {
   // 1 will be treaded as parameter device and passed to DeviceResource
   @Path("{device}")
   public DeviceResource getDevice(@PathParam("device") String id) {
-    return new DeviceResource(uriInfo, request, id);
+    return new DeviceResource(deviceService, uriInfo, request, id);
   }
 
 } 

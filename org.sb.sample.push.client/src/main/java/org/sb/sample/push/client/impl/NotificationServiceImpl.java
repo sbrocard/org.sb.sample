@@ -1,8 +1,5 @@
 package org.sb.sample.push.client.impl;
 
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-
 import org.sb.sample.push.client.IMessageResponse;
 import org.sb.sample.push.client.INotificationService;
 import org.sb.sample.push.client.MessageRequest;
@@ -13,7 +10,7 @@ public class NotificationServiceImpl implements INotificationService {
 
 	private HttpPost httpPost;
 
-	public NotificationServiceImpl(HttpPost httpPost) throws MalformedURLException, URISyntaxException {
+	public NotificationServiceImpl(HttpPost httpPost) {
 		this.httpPost = httpPost;
 	}
 

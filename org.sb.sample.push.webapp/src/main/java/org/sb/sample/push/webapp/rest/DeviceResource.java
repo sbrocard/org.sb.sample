@@ -13,15 +13,19 @@ import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.JAXBElement;
 
 import org.sb.sample.push.client.device.Device;
-import org.sb.sample.push.webapp.ServiceLocator;
+import org.sb.sample.push.client.device.IDeviceService;
 
 public class DeviceResource {
+
+	private IDeviceService deviceService;
+
 	@Context
 	UriInfo uriInfo;
 	@Context
 	Request request;
 	String id;
-	public DeviceResource(UriInfo uriInfo, Request request, String id) {
+	public DeviceResource(IDeviceService deviceService, UriInfo uriInfo, Request request, String id) {
+		this.deviceService = deviceService;
 		this.uriInfo = uriInfo;
 		this.request = request;
 		this.id = id;
@@ -35,7 +39,7 @@ public class DeviceResource {
 	}
 
 	private Device findDevice() {
-		Device device = ServiceLocator.instance.getDeviceService().findDevice(id);
+		Device device = deviceService.findDevice(id);
 		if(device==null)
 			throw new RuntimeException("Get: Device with " + id +  " not found");
 		return device;
@@ -57,19 +61,19 @@ public class DeviceResource {
 
 	@DELETE
 	public void deleteDevice() {
-		Device c = ServiceLocator.instance.getDeviceService().deleteDevice(id);
+		Device c = deviceService.deleteDevice(id);
 		if(c==null)
 			throw new RuntimeException("Delete: Device with " + id +  " not found");
 	}
 
 	private Response putAndGetResponse(Device device) {
 		Response res;
-		if(ServiceLocator.instance.getDeviceService().existsDevice(device.getId())) {
+		if(deviceService.existsDevice(device.getId())) {
 			res = Response.noContent().build();
 		} else {
 			res = Response.created(uriInfo.getAbsolutePath()).build();
 		}
-		ServiceLocator.instance.getDeviceService().registerDevice(device);
+		deviceService.registerDevice(device);
 		return res;
 	}
 

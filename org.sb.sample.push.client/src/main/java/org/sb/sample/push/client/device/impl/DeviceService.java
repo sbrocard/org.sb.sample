@@ -9,10 +9,12 @@ import org.sb.sample.push.client.device.Topic;
 
 public class DeviceService implements IDeviceService {
 
-	/**
-	 * TODO sb, inject the implementation with dependency injection
-	 */
-	private final IDeviceDao dao = new DeviceDao();
+	private IDeviceDao dao;
+	
+	public DeviceService(IDeviceDao dao) {
+		this.dao = dao;
+		System.out.println("new DeviceService");
+	}
 	
 	@Override
 	public void registerDevice(Device device) {

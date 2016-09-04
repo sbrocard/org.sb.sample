@@ -2,26 +2,29 @@ package org.sb.sample.push.webapp.rest;
 
 import static org.junit.Assert.assertEquals;
 
+import javax.inject.Inject;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 
-import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.After;
 import org.junit.Test;
-import org.sb.sample.push.webapp.ServiceLocator;
+import org.sb.sample.push.client.device.IDeviceService;
 
 public class DeviceResourceTest extends JerseyTest {
 
-    @Override
+	@Inject
+	private IDeviceService deviceService;
+
+	@Override
     protected Application configure() {
-        return new ResourceConfig(DevicesResource.class);
+        return Utils.configure(this, getBaseUri(), DevicesResource.class);
     }
  
     @Test
     public void testGetDeviceJson() {
-    	Utils.createDevice("toto");
-    	Utils.createDevice("titi");
+    	Utils.createDevice(deviceService, "toto");
+    	Utils.createDevice(deviceService, "titi");
     	String theDevice =
     			target("/devices/toto").request(MediaType.APPLICATION_JSON)
     			    .get(String.class);
@@ -31,8 +34,8 @@ public class DeviceResourceTest extends JerseyTest {
     
     @Test
     public void testGetDeviceXml() {
-    	Utils.createDevice("toto");
-    	Utils.createDevice("titi");
+    	Utils.createDevice(deviceService, "toto");
+    	Utils.createDevice(deviceService, "titi");
     	String theDevice =
     			target("/devices/toto").request(MediaType.APPLICATION_XML)
     			    .get(String.class);
@@ -43,7 +46,7 @@ public class DeviceResourceTest extends JerseyTest {
     @After
 	public void tearDown() throws Exception {
 		super.tearDown();
-		ServiceLocator.instance.reset();
+		deviceService.reset();
      }
     
 }
