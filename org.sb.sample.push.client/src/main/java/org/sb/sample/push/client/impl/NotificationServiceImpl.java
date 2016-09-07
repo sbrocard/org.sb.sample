@@ -1,5 +1,7 @@
 package org.sb.sample.push.client.impl;
 
+import javax.inject.Inject;
+
 import org.sb.sample.push.client.IMessageResponse;
 import org.sb.sample.push.client.INotificationService;
 import org.sb.sample.push.client.MessageRequest;
@@ -9,7 +11,8 @@ import org.sb.sample.push.client.http.HttpPost;
 public class NotificationServiceImpl implements INotificationService {
 
 	private HttpPost httpPost;
-
+	
+	@Inject
 	public NotificationServiceImpl(HttpPost httpPost) {
 		this.httpPost = httpPost;
 	}
